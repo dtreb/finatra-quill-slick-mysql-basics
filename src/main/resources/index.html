@@ -5,7 +5,7 @@
         <meta name="author" content="dtreb">
 
         <title>Library</title>
-        <!-- Bootstrap core CSS -->
+
         <link href="bootstrap/bootstrap.css" rel="stylesheet">
         <link href="bootstrap/bootstrap-table.css" rel="stylesheet">
     </head>
@@ -14,7 +14,7 @@
 
     <div class="container">
         <h1>Library</h1>
-        <table data-toggle="table" data-url="book">
+        <table id="bookTable" data-toggle="table" data-url="book">
             <thead>
             <tr>
                 <th data-field="id">ID</th>
@@ -24,14 +24,47 @@
             </tr>
             </thead>
         </table>
-    </div><!-- /.container -->
+        <br/>
 
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
+        <h3>Add new book</h3>
+        <form id="addBookForm">
+            <div class="form-group">
+                <input type="text" class="form-control" id="title" placeholder="Enter title">
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" id="author" placeholder="Enter author">
+            </div>
+            <button type="submit" class="btn btn-primary">Add</button>
+        </form>
+
+    </div>
+
+    <!-- ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="bootstrap/bootstrap.js"></script>
     <script src="bootstrap/bootstrap-table.js"></script>
     <script src="bootstrap/bootstrap-table-locale-all.js"></script>
+
+    <script>
+            $("#addBookForm").submit(function(event) {
+                $.post(
+                    'book',
+                    {
+                      title: $("#title").val(),
+                      author: $("#author").val()
+                    },
+                    function(data) {
+                        $("#title").val('');
+                        $("#author").val('');
+                        $("#bookTable").bootstrapTable('refresh', {
+                            url: 'book'
+                        });
+                    }
+                );
+            event.preventDefault();
+        });
+    </script>
+
     </body>
 </html>

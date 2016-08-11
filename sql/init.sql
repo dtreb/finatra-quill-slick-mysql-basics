@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS library.book (
   title TEXT NOT NULL,
   author TEXT NOT NULL,
   created DATETIME
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 TRUNCATE library.book;
 
