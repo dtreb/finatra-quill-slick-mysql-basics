@@ -13,6 +13,22 @@ class LibraryController @Inject() (
     libraryService: LibraryService
 ) extends Controller {
 
+  get("/book/:id") { request: Request =>
+    for {
+      book <- libraryService.find(request.getLongParam("id"))
+    } yield {
+      book
+    }
+  }
+
+  get("/book") { request: Request =>
+    for {
+      books <- libraryService.find
+    } yield {
+      books
+    }
+  }
+
   get("/:*") { request: Request =>
     response.ok.fileOrIndex(
       request.params("*"),
@@ -34,19 +50,25 @@ class LibraryController @Inject() (
     }
   }
 
-  get("/book/:id") { request: Request =>
+  post("/book/:id") { request: Request =>
     for {
-      book <- libraryService.find(request.getLongParam("id"))
+      result <- libraryService.update(
+        new Book(
+          request.getLongParam("id"),
+          request.getParam("title"),
+          request.getParam("author")
+        )
+      )
     } yield {
-      book
+      response.ok
     }
   }
 
-  get("/book") { request: Request =>
+  delete("/book/:id") { request: Request =>
     for {
-      books <- libraryService.find
+      book <- libraryService.delete(request.getLongParam("id"))
     } yield {
-      books
+      response.ok
     }
   }
 }

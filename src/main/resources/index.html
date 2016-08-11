@@ -9,33 +9,69 @@
         <link href="bootstrap/bootstrap.css" rel="stylesheet">
         <link href="bootstrap/bootstrap-table.css" rel="stylesheet">
     </head>
+    <style>
+        .divider{
+            width:20px;
+            height:auto;
+            display:inline-block;
+        }
+    </style>
 
     <body>
 
     <div class="container">
         <h1>Library</h1>
-        <table id="bookTable" data-toggle="table" data-url="book">
+        <table id="bookTable" class="table table-striped" data-toggle="table" data-url="book">
             <thead>
             <tr>
                 <th data-field="id">ID</th>
                 <th data-field="title">Title</th>
                 <th data-field="author">Author</th>
                 <th data-field="created">Created Date</th>
+                <th data-field="id">Delete</th>
             </tr>
             </thead>
         </table>
         <br/>
 
-        <h3>Add new book</h3>
-        <form id="addBookForm">
-            <div class="form-group">
-                <input type="text" class="form-control" id="title" placeholder="Enter title">
-            </div>
-            <div class="form-group">
-                <input type="text" class="form-control" id="author" placeholder="Enter author">
-            </div>
-            <button type="submit" class="btn btn-primary">Add</button>
-        </form>
+        <div id="addArea">
+            <h3>Add new book</h3>
+            <form id="addBookForm">
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" class="form-control" id="title" placeholder="Enter title">
+                </div>
+                <div class="form-group">
+                    <label for="author">Author</label>
+                    <input type="text" class="form-control" id="author" placeholder="Enter author">
+                </div>
+                <button type="submit" class="btn btn-primary">Add</button>
+            </form>
+        </div>
+
+        <div id="editArea" hidden>
+            <h3>Edit existing book</h3>
+            <form id="editBookForm">
+                <div class="form-group">
+                    <label for="editId">ID</label>
+                    <input type="text" class="form-control" id="editId" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="editTitle">New title</label>
+                    <input type="text" class="form-control" id="editTitle" placeholder="Enter new title">
+                </div>
+                <div class="form-group">
+                    <label for="editAuthor">New author</label>
+                    <input type="text" class="form-control" id="editAuthor" placeholder="Enter new author">
+                </div>
+                <div class="form-group">
+                    <label for="editCreated">Created date</label>
+                    <input type="text" class="form-control" id="editCreated" disabled>
+                </div>
+                <button type="submit" class="btn btn-primary">Edit</button>
+                <button type="button" class="btn btn-default" onClick="resetEdit()">Back</button>
+            </form>
+        </div>
 
     </div>
 
@@ -44,9 +80,54 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="bootstrap/bootstrap.js"></script>
     <script src="bootstrap/bootstrap-table.js"></script>
-    <script src="bootstrap/bootstrap-table-locale-all.js"></script>
 
     <script>
+            // Add column with delete buttons and correspondent function call
+            $("#bookTable").bind('load-success.bs.table', function(event) {
+                if (!$(".no-records-found")[0]){
+                    $('#bookTable tbody tr').each(function(){$(this).children('td:last')
+                        .html('<a class="btn btn-default editBook" onClick="editBookForm(' + $(this).children('td:last').text() + ')"><i class="icon-edit"></i>&nbsp;Edit</a><div class="divider"/>' +
+                              '<a class="btn btn-danger removeBook" onClick="deleteBook(' + $(this).children('td:last').text() + ')"><i class="icon-trash icon-white"></i>&nbsp;Delete</a>')});
+                }
+            });
+
+            // Reload table with GET JSON response
+            function reloadTable() {
+                $("#bookTable").bootstrapTable('refresh', {
+                    url: 'book'
+                });
+            }
+
+            // Delete record with specified Id
+            function deleteBook(id) {
+                $.ajax({
+                    url: 'book/' + id,
+                    type: 'DELETE',
+                    success: function(result) {
+                        resetEdit();
+                        reloadTable();
+                    }
+                });
+            };
+
+            // Close edit form
+            function resetEdit() {
+                $('#editArea').hide();
+                $('#addArea').show();
+            };
+
+            // Delete record with specified Id
+            function editBookForm(id) {
+                $.getJSON('book/' + id, function(data) {
+                  $.each( data, function(key, val) {
+                        $('#edit' + key.charAt(0).toUpperCase() + key.slice(1)).val(val)
+                  });
+                });
+                $('#addArea').hide();
+                $('#editArea').show();
+            };
+
+            // Add book form handler
             $("#addBookForm").submit(function(event) {
                 $.post(
                     'book',
@@ -57,13 +138,27 @@
                     function(data) {
                         $("#title").val('');
                         $("#author").val('');
-                        $("#bookTable").bootstrapTable('refresh', {
-                            url: 'book'
-                        });
+                        reloadTable();
                     }
                 );
-            event.preventDefault();
-        });
+                event.preventDefault();
+            });
+
+            // Edit book form handler
+            $("#editBookForm").submit(function(event) {
+                $.post(
+                    'book/' + $("#editId").val(),
+                    {
+                      title: $("#editTitle").val(),
+                      author: $("#editAuthor").val()
+                    },
+                    function(data) {
+                        resetEdit();
+                        reloadTable();
+                    }
+                );
+                event.preventDefault();
+            });
     </script>
 
     </body>
