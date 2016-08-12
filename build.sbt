@@ -48,23 +48,13 @@ libraryDependencies ++= Seq(
   "io.getquill" %% "quill-finagle-mysql" % versions.getquill,
   "com.zaxxer" % "HikariCP" % versions.hikaricp,
   "mysql" % "mysql-connector-java" % versions.mysqljdbc,
-  "joda-time" % "joda-time" % versions.jodaTime,
-  "org.joda" % "joda-convert" % versions.jodaConvert,
 
-  // twitter async
-  "com.github.foursquare" % "twitter-util-async" % versions.twitterAsync,
-
-  // scala async
-  "org.scala-lang.modules" %% "scala-async" %  versions.async,
+  // others
+  "ch.qos.logback" % "logback-classic" % versions.logback,
 
   // typesafe config
   "com.typesafe" % "config" % versions.typesafeConfig,
-  "com.iheart" %% "ficus" % versions.ficus, // for scala friendly typesafe config
-
-  // reflect
-  "org.scala-lang" % "scala-reflect" % scalaVersion.value,
-  // others
-  "ch.qos.logback" % "logback-classic" % versions.logback,
+  "com.iheart" %% "ficus" % versions.ficus,
 
   // test
   "com.twitter" %% "finatra-http" % versions.finatra % "test",
@@ -82,13 +72,6 @@ libraryDependencies ++= Seq(
   "com.twitter" %% "inject-core" % versions.finatra % "test" classifier "tests",
   "com.twitter" %% "inject-modules" % versions.finatra % "test" classifier "tests",
 
-  "org.mockito" % "mockito-core" % versions.mockito % "test",
-  "org.scalatest" %% "scalatest" % versions.scalatest % "test",
-  "org.specs2" %% "specs2" % versions.specs2 % "test"
-)
-
-
-Revolver.settings
-
-
-fork in run := true
+  "org.mockito" % "mockito-core" % "1.9.5" % "test",
+  "org.scalatest" %% "scalatest" % "2.2.3" % "test",
+  "org.specs2" %% "specs2" % "2.3.12" % "test")

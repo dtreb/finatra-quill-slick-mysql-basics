@@ -5,6 +5,7 @@ import javax.inject.{ Inject, Singleton }
 
 import com.dtreb.library.models.Book
 import com.dtreb.library.modules.QuillDatabaseModule.QuillDatabaseSource
+import com.twitter.finagle.exp.mysql.Result
 import com.twitter.util.Future
 import io.getquill._
 
@@ -32,7 +33,7 @@ class LibraryService @Inject() (db: QuillDatabaseSource) {
     db.run(q)
   }
 
-  def create(book: Book) = {
+  def create(book: Book): Future[Result] = {
     val a = quote {
       (title: String, author: String, created: Date) =>
         query[Book].insert(
@@ -41,10 +42,10 @@ class LibraryService @Inject() (db: QuillDatabaseSource) {
           _.created -> created
         )
     }
-    db.run(a)(List((book.title, book.author, new Date())))
+    db.run(a)(List((book.title, book.author, new Date()))).map(_.head)
   }
 
-  def update(book: Book) = {
+  def update(book: Book): Future[Result] = {
     val a = quote {
       (id: Long, title: String, author: String) =>
         query[Book].filter(b => b.id == id).update(
@@ -52,14 +53,14 @@ class LibraryService @Inject() (db: QuillDatabaseSource) {
           _.author -> author
         )
     }
-    db.run(a)(List((book.id, book.title, book.author)))
+    db.run(a)(List((book.id, book.title, book.author))).map(_.head)
   }
 
-  def delete(id: Long) = {
+  def delete(id: Long): Future[Result] = {
     val a = quote {
       (id: Long) =>
         query[Book].filter(p => p.id == id).delete
     }
-    db.run(a)(id)
+    db.run(a)(List(id)).map(_.head)
   }
 }

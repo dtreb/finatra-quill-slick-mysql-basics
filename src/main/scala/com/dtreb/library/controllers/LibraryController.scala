@@ -5,8 +5,10 @@ import javax.inject.{ Inject, Singleton }
 
 import com.dtreb.library.models.Book
 import com.dtreb.library.services.LibraryService
+import com.twitter.finagle.exp.mysql.OK
 import com.twitter.finagle.http.Request
 import com.twitter.finatra.http.Controller
+import com.twitter.util.Future
 
 @Singleton
 class LibraryController @Inject() (
@@ -14,19 +16,11 @@ class LibraryController @Inject() (
 ) extends Controller {
 
   get("/book/:id") { request: Request =>
-    for {
-      book <- libraryService.find(request.getLongParam("id"))
-    } yield {
-      book
-    }
+    libraryService.find(request.getLongParam("id"))
   }
 
   get("/book") { request: Request =>
-    for {
-      books <- libraryService.find
-    } yield {
-      books
-    }
+    libraryService.find
   }
 
   get("/:*") { request: Request =>
@@ -37,38 +31,35 @@ class LibraryController @Inject() (
   }
 
   post("/book") { request: Request =>
-    for {
-      result <- libraryService.create(
-        new Book(
-          request.getParam("title"),
-          request.getParam("author"),
-          new Date()
-        )
+    libraryService.create(
+      new Book(
+        request.getParam("title"),
+        request.getParam("author"),
+        new Date()
       )
-    } yield {
-      response.ok
-    }
+    ).flatMap(r => r match {
+        case r: OK => libraryService.find(r.insertId)
+        case r => Future { r } // TODO: handle exceptions properly
+      })
   }
 
   post("/book/:id") { request: Request =>
-    for {
-      result <- libraryService.update(
-        new Book(
-          request.getLongParam("id"),
-          request.getParam("title"),
-          request.getParam("author")
-        )
+    libraryService.update(
+      new Book(
+        request.getLongParam("id"),
+        request.getParam("title"),
+        request.getParam("author")
       )
-    } yield {
-      response.ok
-    }
+    ).flatMap(r => r match {
+        case r: OK => libraryService.find(request.getLongParam("id"))
+        case r => Future { r } // TODO: handle exceptions properly
+      })
   }
 
   delete("/book/:id") { request: Request =>
-    for {
-      book <- libraryService.delete(request.getLongParam("id"))
-    } yield {
-      response.ok
-    }
+    libraryService.delete(request.getLongParam("id")).flatMap(r => r match {
+      case r: OK => Future { request.getLongParam("id") }
+      case r => Future { r } // TODO: handle exceptions properly
+    })
   }
 }
