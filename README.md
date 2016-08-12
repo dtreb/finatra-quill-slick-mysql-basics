@@ -6,7 +6,7 @@ This is a very simple project that demonstrates usage of:
  1. [Finatra](http://twitter.github.io/finatra/) server, controller, model
  2. [Quill](http://getquill.io/) with MySQL DB
  3. [Bootstrap](http://getbootstrap.com/) and [jQuery](https://jquery.com/) for UI
- 4. Basic scala tests  
+ 4. Basic scala tests with [Mockito](http://mockito.org/)  
 
 ###Setup:
 
