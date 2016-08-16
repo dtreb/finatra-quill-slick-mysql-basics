@@ -20,7 +20,7 @@ lazy val versions = new {
   val mockito = "1.9.5"
   val scalatest = "2.2.6"
   val specs2 = "2.3.12"
-  val ficus = "1.2.3" // for scala friendly typesafe config
+  val ficus = "1.1.2" // for scala friendly typesafe config
   val async = "0.9.5"
 }
 
@@ -54,7 +54,7 @@ libraryDependencies ++= Seq(
 
   // typesafe config
   "com.typesafe" % "config" % versions.typesafeConfig,
-  "com.iheart" %% "ficus" % versions.ficus,
+  "net.ceedubs" % "ficus_2.11" % versions.ficus,
 
   // test
   "com.twitter" %% "finatra-http" % versions.finatra % "test",
