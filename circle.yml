@@ -1,5 +1,5 @@
 ## Customize database setup
 database:
   override:
-    - mv database.ci.yml config/database.yml
+    - cp src/main/resources/conf/database.ci.yml config/database.yml
     - bundle exec rake db:create db:schema:load
