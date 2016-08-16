@@ -10,9 +10,9 @@ This is a very simple project that demonstrates usage of:
 
 ###Setup:
 
- 1. Run MySQL and execute script from [init.sql](./sql/init.sql)
-    Note:
-    Config files use "ubuntu" user and "circle_test" database for [CircleCI](https://circleci.com/) integration.
+ 1. Run MySQL and execute script from [init.sql](./sql/init.sql)  
+    Note: config files use **ubuntu** user and **circle_test** database for [CircleCI](https://circleci.com/) integration.  
+    
  2. Adjust config at [application.conf](./src/main/resources/conf/application.conf) with your MySQL credentials
  3. Run application via
     ```$ sbt run```
