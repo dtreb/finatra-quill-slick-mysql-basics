@@ -4,7 +4,7 @@ import java.util.Date
 import javax.inject.{ Inject, Singleton }
 
 import com.dtreb.library.models.Book
-import com.dtreb.library.services.LibraryService
+import com.dtreb.library.services.QuillLibraryService
 import com.twitter.finagle.exp.mysql.OK
 import com.twitter.finagle.http.Request
 import com.twitter.finatra.http.Controller
@@ -12,7 +12,7 @@ import com.twitter.util.Future
 
 @Singleton
 class LibraryController @Inject() (
-    libraryService: LibraryService
+    libraryService: QuillLibraryService
 ) extends Controller {
 
   get("/book/:id") { request: Request =>

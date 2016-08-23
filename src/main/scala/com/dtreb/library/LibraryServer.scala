@@ -1,7 +1,7 @@
 package com.dtreb.library
 
 import com.dtreb.library.controllers.LibraryController
-import com.dtreb.library.modules.{ CustomJacksonModule, QuillDatabaseModule, TypesafeConfigModule }
+import com.dtreb.library.modules.{ CustomJacksonModule, DatabaseModule, TypesafeConfigModule }
 import com.dtreb.library.warmup.LibraryWarmupHandler
 import com.twitter.finagle.http.{ Request, Response }
 import com.twitter.finatra.http.HttpServer
@@ -13,7 +13,7 @@ object LibraryServerMain extends LibraryServer
 class LibraryServer extends HttpServer {
   override def modules = Seq(
     TypesafeConfigModule,
-    QuillDatabaseModule
+    DatabaseModule
   )
 
   override def jacksonModule = CustomJacksonModule

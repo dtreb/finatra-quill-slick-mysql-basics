@@ -7,13 +7,13 @@ import io.getquill.naming.SnakeCase
 import io.getquill.sources.finagle.mysql.FinagleMysqlSource
 import io.getquill.{ FinagleMysqlSourceConfig, _ }
 
-object QuillDatabaseModule extends TwitterModule {
+object DatabaseModule extends TwitterModule {
 
-  type QuillDatabaseSource = FinagleMysqlSource[SnakeCase]
+  type DatabaseSource = FinagleMysqlSource[SnakeCase]
 
   @Provides @Singleton
-  def provideDataBaseSource(conf: Config): QuillDatabaseSource = source(new FinagleMysqlSourceConfig[SnakeCase]("") {
-    override def config = conf.getConfig("quill.db")
+  def provideDataBaseSource(conf: Config): DatabaseSource = source(new FinagleMysqlSourceConfig[SnakeCase]("") {
+    override def config = conf.getConfig("db")
   })
 
 }
