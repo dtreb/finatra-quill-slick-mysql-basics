@@ -1,10 +1,10 @@
-#Finatra Quill Mysql Basics
+#Finatra, Quill and Slick with Mysql. Basics
 
 ###Info
 This is a very simple project that demonstrates usage of:
 
  1. [Finatra](http://twitter.github.io/finatra/) server, controller, model
- 2. [Quill](http://getquill.io/) with MySQL DB
+ 2. [Quill](http://getquill.io/) and [Slick](http://slick.lightbend.com/) with MySQL DB
  3. [Bootstrap](http://getbootstrap.com/) and [jQuery](https://jquery.com/) for UI
  4. Basic scala tests with [Mockito](http://mockito.org/)  
 
@@ -17,5 +17,6 @@ This is a very simple project that demonstrates usage of:
  3. Run application via
     ```$ sbt run```
  4. Then browse to: [http://127.0.0.1:9999](http://127.0.0.1:9999)
+ 5. [Optional] Modify [LibraryController(15)](./src/main/scala/com/dtreb/library/controllers/LibraryController.scala) to use **Slick** instead of **Quill**. 
  
 Feel free to use, comment or collaborate. 
