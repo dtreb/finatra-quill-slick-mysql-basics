@@ -1,6 +1,6 @@
 package com.dtreb.library.warmup
 
-import javax.inject.{ Inject, Singleton }
+import javax.inject.{Inject, Singleton}
 
 import com.twitter.finatra.http.routing.HttpWarmup
 import com.twitter.finatra.httpclient.RequestBuilder._
