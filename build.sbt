@@ -1,6 +1,6 @@
 import sbt.Keys._
 
-name := """finatra-quill-mysql-basics"""
+name := """finatra-quill-slick-mysql-basics"""
 version := "1.1"
 scalaVersion := "2.11.8"
 
