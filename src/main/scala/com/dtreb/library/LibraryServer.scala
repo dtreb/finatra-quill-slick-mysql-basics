@@ -1,6 +1,7 @@
 package com.dtreb.library
 
 import com.dtreb.library.controllers.LibraryController
+import com.dtreb.library.filters.SessionFilter
 import com.dtreb.library.modules._
 import com.dtreb.library.warmup.LibraryWarmupHandler
 import com.twitter.finagle.http.{Request, Response}
@@ -14,7 +15,8 @@ class LibraryServer extends HttpServer {
   override def modules = Seq(
     TypesafeConfigModule,
     QuillDatabaseModule,
-    SlickDatabaseModule
+    SlickDatabaseModule,
+    SessionModule
   )
 
   override def jacksonModule = CustomJacksonModule
@@ -26,7 +28,7 @@ class LibraryServer extends HttpServer {
       .filter[LoggingMDCFilter[Request, Response]]
       .filter[TraceIdMDCFilter[Request, Response]]
       .filter[CommonFilters]
-      .add[LibraryController]
+      .add[SessionFilter, LibraryController]
   }
 
   override def warmup() {
