@@ -21,7 +21,8 @@ class SessionFilter(secret: String, settings: CookieSettings) extends SimpleFilt
 
   override def apply(req: Request, service: Service[Request, Response]): Future[Response] = {
 
-    // Todo: here you check DB for credentials or existing session, persist new one etc.
+    // Here you can check DB for credentials or existing session,
+    // persist new one etc.
 
     readSession(req)
 
