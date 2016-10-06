@@ -1,7 +1,7 @@
 package com.dtreb.library
 
 import com.dtreb.library.models.Book
-import com.dtreb.library.services.{ BookDaoQuillImpl, BookDaoSlickImpl }
+import com.dtreb.library.services.BookDaoQuillImpl
 import com.google.inject.testing.fieldbinder.Bind
 import com.twitter.finagle.http.Status._
 import com.twitter.finatra.http.EmbeddedHttpServer

@@ -1,8 +1,8 @@
 package com.dtreb.library.filters
 
-import java.io.{ByteArrayInputStream, ByteArrayOutputStream, ObjectInputStream, ObjectOutputStream}
+import java.io.{ByteArrayOutputStream, ObjectOutputStream}
 
-import com.dtreb.library.utils.{MessageEncryptorPool, Utils}
+import com.dtreb.library.utils.TokenGenerator
 import com.twitter.finagle.http.{Cookie, Request, Response}
 import com.twitter.finagle.{Service, SimpleFilter}
 import com.twitter.finatra.http.response.ResponseBuilder
@@ -17,29 +17,16 @@ case class CookieSettings(name: String,
 
 class SessionFilter(secret: String, settings: CookieSettings) extends SimpleFilter[Request, Response] {
 
-  val encPool = new MessageEncryptorPool(secret)
+  private val tokenGenerator = new TokenGenerator
 
   override def apply(req: Request, service: Service[Request, Response]): Future[Response] = {
 
     // Here you can check DB for credentials or existing session,
     // persist new one etc.
-
-    readSession(req)
-
     service(req).map { resp =>
       writeSession(resp)
       resp
     }
-  }
-
-  private def readSession(req: Request): Unit = {
-    val s = req.cookies.get(settings.name).map { cookie =>
-      val is = new ByteArrayInputStream(encPool.get.decryptAndVerify(cookie.value))
-      Utils.using(new ObjectInputStream(is)) { ois =>
-        ois.readObject.asInstanceOf[Map[String, String]]
-      }
-    } getOrElse Map.empty[String, String]
-    req.ctx.update(SessionContext.ReqSessionField, s)
   }
 
   private def writeSession(resp: Response) = {
@@ -47,7 +34,7 @@ class SessionFilter(secret: String, settings: CookieSettings) extends SimpleFilt
     val oos = new ObjectOutputStream(os)
     oos.writeObject(resp.ctx.apply(SessionContext.RespSessionField))
     oos.close()
-    val s = encPool.get.encryptAndSign(os.toByteArray)
+    val s = tokenGenerator.generateMD5Token("")
     val cookie = new Cookie(settings.name, s)
     cookie.domain = settings.domain
     cookie.httpOnly = settings.isHttpOnly
