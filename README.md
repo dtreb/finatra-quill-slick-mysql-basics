@@ -1,6 +1,6 @@
-#Finatra, Quill and Slick with Mysql. Basics
+# Finatra, Quill and Slick with Mysql. Basics
 
-###Info
+### Info
 This is a very simple project that demonstrates usage of:
 
  1. [Finatra](http://twitter.github.io/finatra/) server, controller, model
@@ -9,7 +9,7 @@ This is a very simple project that demonstrates usage of:
  4. Basic scala tests with [Mockito](http://mockito.org/)
  5. Generated Session ID persisted in cookies   
 
-###Setup:
+### Setup:
 
  1. Run MySQL and execute script from [init.sql](./sql/init.sql)  
     Note: config files use **ubuntu** user and **circle_test** database for [CircleCI](https://circleci.com/) integration.  
